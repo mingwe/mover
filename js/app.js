@@ -1,7 +1,7 @@
 // console.log(React);
 // console.log(ReactDOM);
 
-var myNews = [
+var mySlogans = [
     {
         author: 'Simon',
         text: 'Im doing breaking news'
@@ -20,53 +20,65 @@ var myNews = [
     }
 ];
 
+// mySlogans = '';
+
 var App = React.createClass({
     render: function() {
         return (
             <div className="testCSS">
-                im App!
-                <News slogans={myNews}/> {/*data added*/}
-                <Comments/>
+                <h3>They say...</h3>
+                <Quotes slogans={mySlogans}/>
             </div>
          );
     }
 });
 
-var News = React.createClass({
+var Article = React.createClass({
+
+   render: function() {
+
+       var author = this.props.slogans.author,
+           text = this.props.slogans.text;
+
+       return (
+           <details>
+               <summary className="slogan__author">{author}:</summary>
+               <p className="slogan__text">{text}</p>
+           </details>
+       )
+   }
+});
+
+var Quotes = React.createClass({
     render: function() {
 
         var slogans = this.props.slogans;
-        var slogansTemplate = slogans.map(function (item, index) {
-            return (
-              <div key={index}>
-                <details>
-                    <summary className="slogan__author">
-                        {item.author}:
-                    </summary>
-                    <p className="slogan__text">{item.text}</p>
-                </details>
-              </div>
-            )
-        })
+        var slogansTemplate;
+
+        if (slogans.length > 0) {
+            slogansTemplate = slogans.map(function (item, index) {
+                return (
+                  <div key={index}>
+                    <Article slogans={item}/>
+                  </div>
+                )
+            })
+        }
+        else {
+            slogansTemplate = <p>We have nothing to say.</p>
+        }
+
 
         // console.log(slogansTemplate);
 
         return (
-            <div className="news">
+            <div className="qoutes">
                 {slogansTemplate}
-                <p><strong>Total slogans: {slogans.length}</strong></p>
+                <p className={slogans.length > 0 ? 'countEnabled':'hidden'}><strong>Total slogans: {slogans.length}</strong></p>
             </div>
         );
     }
 });
-
-var Comments = React.createClass({
-    render: function() {
-        return (
-          <div className="comment">Нет новостей - комментировать нечего.</div>
-        );
-    }
-})
 
 ReactDOM.render(
     <App />,document.getElementById('root')
