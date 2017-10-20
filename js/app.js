@@ -13,6 +13,10 @@ var myNews = [
     {
         author: 'Kurt',
         text: 'sit and drink pennyroyal tea'
+    },
+    {
+        author: 'Iggy',
+        text: 'its all messed up!'
     }
 ];
 
@@ -45,9 +49,12 @@ var News = React.createClass({
             )
         })
 
+        // console.log(slogansTemplate);
+
         return (
             <div className="news">
                 {slogansTemplate}
+                <p><strong>Total slogans: {slogans.length}</strong></p>
             </div>
         );
     }
