@@ -42,14 +42,14 @@ var App = React.createClass({
     render: function() {
         return (
             {/*<div className="testCSS">*/}
-                {/*<h3>They say...</h3>*/}
-                {/*<Quotes slogans={mySlogans}/>*/}
-            {/*</div>*/}
+        {/*<h3>They say...</h3>*/}
+        {/*<Quotes slogans={mySlogans}/>*/}
+        {/*</div>*/}
 
-            <div className={'parent-block'}>
-                <Mover>HEY</Mover>
-            </div>
-         );
+        <div className={'parent-block'}>
+            <Mover>HEY</Mover>
+        </div>
+    );
     }
 });
 
@@ -69,9 +69,9 @@ var Quotes = React.createClass({
         if (slogans.length > 0) {
             slogansTemplate = slogans.map(function (item, index) {
                 return (
-                  <div key={index}>
-                    <Article slogans={item}/>
-                  </div>
+                    <div key={index}>
+                        <Article slogans={item}/>
+                    </div>
                 )
             })
         }
@@ -102,20 +102,20 @@ var Article = React.createClass({
     },
 
     getInitialState: function() {
-       return {
-           visible: false,
-           rating: 0,
-           popularity: 'low'
-       };
+        return {
+            visible: false,
+            rating: 0,
+            popularity: 'low'
+        };
     },
 
     readmoreClick: function(e) {
-       e.preventDefault();
-       this.setState({
-           visible: true,
-           rating: 1337,
-           popularity: 'high'
-       });
+        e.preventDefault();
+        this.setState({
+            visible: true,
+            rating: 1337,
+            popularity: 'high'
+        });
     },
 
     render: function() {
