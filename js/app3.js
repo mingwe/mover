@@ -41,102 +41,85 @@ var mySlogans = [
 var App = React.createClass({
     render: function() {
         return (
-            {/*<div className="testCSS">*/}
-        {/*<h3>They say...</h3>*/}
-        {/*<Quotes slogans={mySlogans}/>*/}
-        {/*</div>*/}
-
         <div className={'parent-block'}>
-            <Mover>HEY</Mover>
+            <Mover name={'I AM MOVER'}/>
+            <Mover name={'I AM MOVER TOO'}/>
         </div>
     );
     }
 });
 
 
-var Quotes = React.createClass({
+var Mover = React.createClass({
 
-    propTypes: {
-        slogans: React.PropTypes.array.isRequired
+    getInitialState: function() {
+        return {
+            left: 0,
+            up: 0,
+            direction: 'Right'
+        };
+    },
+
+    componentDidMount() {
+        this.interval = setInterval(() => this.tick(), 50);
+    },
+
+    tick() {
+        if (this.state.direction == 'Right') {
+            this.setState(prevState => ({
+                left: prevState.left + 1
+            }));
+        }
+        else {
+            if (this.state.direction == 'Left') {
+                this.setState(prevState => ({
+                    left: prevState.left - 1
+                }));
+            }
+            else {
+                if (this.state.direction == 'Up') {
+                    this.setState(prevState => ({
+                        up: prevState.up - 1
+                    }));
+                }
+                else {
+                    if (this.state.direction == 'Down') {
+                        this.setState(prevState => ({
+                            up: prevState.up + 1
+                        }));
+                    }
+                }
+            }
+        }
+    },
+
+    handleKeyPress: function (event) {
+        if(event.key == 'ArrowLeft' || event.key == 'ArrowRight' || event.key == 'ArrowUp' || event.key == 'ArrowDown'){
+            let myDirection = event.key.substr(5, 5);
+            this.setState({
+                direction: myDirection
+            })
+        }
     },
 
     render: function() {
-
-        var slogans = this.props.slogans;
-        var slogansTemplate;
-
-
-        if (slogans.length > 0) {
-            slogansTemplate = slogans.map(function (item, index) {
-                return (
-                    <div key={index}>
-                        <Article slogans={item}/>
-                    </div>
-                )
-            })
-        }
-        else {
-            slogansTemplate = <p>We have nothing to say.</p>
-        }
-
-
-        // console.log(slogansTemplate);
-
         return (
-            <div className="qoutes">
-                {slogansTemplate}
-                <p className={'slogans__cont ' + (slogans.length > 0 ? 'countEnabled':'hidden')}><strong>Total slogans: {slogans.length}</strong></p>
+            <div className={'mover'}
+                 tabIndex="-1" // Enables key handlers on div
+                 onKeyDown={this.handleKeyPress} style={
+                {
+                    background: "#eee",
+                    left: this.state.left + 'px',
+                    top: this.state.up + 'px',
+                    margin: "20px"
+                }
+            }>
+                {this.props.name}
             </div>
         );
     }
 });
 
-var Article = React.createClass({
-
-    propTypes: {
-        slogans: React.PropTypes.shape({
-            author: React.PropTypes.string.isRequired,
-            text: React.PropTypes.string.isRequired,
-            bigText: React.PropTypes.string.isRequired
-        })
-    },
-
-    getInitialState: function() {
-        return {
-            visible: false,
-            rating: 0,
-            popularity: 'low'
-        };
-    },
-
-    readmoreClick: function(e) {
-        e.preventDefault();
-        this.setState({
-            visible: true,
-            rating: 1337,
-            popularity: 'high'
-        });
-    },
-
-    render: function() {
-
-        var author = this.props.slogans.author,
-            text = this.props.slogans.text,
-            bigText = this.props.slogans.bigText,
-            visible = this.state.visible;
-
-        console.log('render', this);
-
-        return (
-            <details>
-                <summary className="slogan__author">{author}:</summary>
-                <p className="slogan__text">{text}</p>
-                <a href="#" onClick={this.readmoreClick} className={'slogan__readmore ' + (visible ? 'hidden' : '')}>Read more...</a>
-                <p className={'slogan__big-text ' + (visible ? '': 'hidden')}>{bigText}</p>
-            </details>
-        )
-    }
-});
 
 ReactDOM.render(
     <App />,document.getElementById('root')
