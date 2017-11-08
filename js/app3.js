@@ -1,54 +1,78 @@
-// console.log(React);
-// console.log(ReactDOM);
-
-Date.prototype.daysInMonth = function() {
-    return 33 - new Date(this.getFullYear(), this.getMonth(), 33).getDate();
-};
-
-var theDate = new Date();
-
-console.log(theDate);
-console.log(theDate.getMonth());
-console.log(theDate.daysInMonth());
-console.log(theDate.getDay());
-console.log(theDate);
-
-
-
-var mySlogans = [
-    {
-        author: 'Blackie',
-        text: 'Wasp da best',
-        bigText: 'do you know what is like... heaven`s hung in black',
-    },
-    {
-        author: 'Kurt',
-        text: 'sit and drink pennyroyal tea',
-        bigText: 'Sit and drink Pennyroyal Tea\n' +
-        'Distill the life that\'s inside of me\n' +
-        'Sit and drink Pennyroyal Tea\n' +
-        'I\'m anemic royalty',
-    },
-    {
-        author: 'Iggy',
-        text: 'its all messed up!',
-        bigText: 'its all messed up!... and now i wonna... so come on',
-    }
-];
-
-// mySlogans = '';
 
 var App = React.createClass({
     render: function() {
         return (
         <div className={'parent-block'}>
-            <Mover name={'I AM MOVER'}/>
-            <Mover name={'I AM MOVER TOO'}/>
+            <Mover name={'I AM MOVER'} speed={'5'}/>
+            <Mover name={'I AM MOVER'} speed={'2'} bot={true} changedirinterval={500}/>
         </div>
     );
     }
 });
 
+function doMove (obj, dir) {
+
+    var direct;
+    var fwards;
+    var opposite;
+
+    if (dir == 'Left' || dir == 'Right') {
+        direct = 'left';
+        if (dir == 'Left') {
+            opposite = 'Right';
+        }
+        else {
+            opposite = 'Left';
+        }
+    }
+    else {
+        direct = 'up';
+        if (dir == 'Up') {
+            opposite = 'Down';
+        }
+        else {
+            opposite = 'Up';
+        }
+    }
+    if (dir == 'Left' || dir == 'Up') {
+        fwards = -1;
+        if (obj.state[direct] <= 0) {
+            obj.setState({
+                direction: opposite
+            })
+        }
+    }
+    else {
+        if (!(((direct == 'up') && (obj.state.up >= obj.state.windowHeight)) || ((direct == 'left') && (obj.state.left >= obj.state.windowWidth)))) {
+            fwards = 1;
+        }
+        else {
+            fwards = -1;
+            obj.setState({
+                direction: opposite
+            })
+        }
+    }
+    obj.setState(prevState => ({
+        [direct]: prevState[direct] + 1*fwards
+    }));
+}
+
+
+function changeDir(obj, dir) {
+    let directions = [
+        'Left',
+        'Right',
+        'Up',
+        'Down'
+    ];
+    let newDirection = directions[Math.round((Math.random()*3))];
+    if (obj.state.direction != newDirection) {
+        obj.setState ({
+            direction: newDirection
+        })
+    }
+}
 
 var Mover = React.createClass({
 
@@ -56,41 +80,25 @@ var Mover = React.createClass({
         return {
             left: 0,
             up: 0,
-            direction: 'Right'
+            direction: 'Right',
+            windowWidth: window.innerWidth,
+            windowHeight: window.innerHeight
         };
     },
 
     componentDidMount() {
-        this.interval = setInterval(() => this.tick(), 50);
+        this.interval = setInterval(() => this.move(), this.props.speed);
+        if (this.props.bot) {
+            this.interval = setInterval(() => this.changeDirection(), this.props.changedirinterval);
+        }
     },
 
-    tick() {
-        if (this.state.direction == 'Right') {
-            this.setState(prevState => ({
-                left: prevState.left + 1
-            }));
-        }
-        else {
-            if (this.state.direction == 'Left') {
-                this.setState(prevState => ({
-                    left: prevState.left - 1
-                }));
-            }
-            else {
-                if (this.state.direction == 'Up') {
-                    this.setState(prevState => ({
-                        up: prevState.up - 1
-                    }));
-                }
-                else {
-                    if (this.state.direction == 'Down') {
-                        this.setState(prevState => ({
-                            up: prevState.up + 1
-                        }));
-                    }
-                }
-            }
-        }
+    move() {
+        doMove(this, this.state.direction);
+    },
+
+    changeDirection() {
+        changeDir(this, this.state.direction);
     },
 
     handleKeyPress: function (event) {
@@ -111,7 +119,7 @@ var Mover = React.createClass({
                     background: "#eee",
                     left: this.state.left + 'px',
                     top: this.state.up + 'px',
-                    margin: "20px"
+                    margin: "50px"
                 }
             }>
                 {this.props.name}
