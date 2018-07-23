@@ -56,7 +56,7 @@ var App = React.createClass({
             <div>
                 {!this.state.catched &&
                 <div className={'parent-block'}>
-                    <Mover name={'WEBVERSOR'} speed={1000 / this.state.level} bot={false} position={this.position} stop={this.state.catched}/>
+                    <Mover name={'usr'} speed={1000 / this.state.level} bot={false} position={this.position} stop={this.state.catched}/>
                     <Mover name={''} speed={700 / this.state.level} bot={true} changedirinterval={2500}
                            position={this.position} stop={this.state.catched}/>
                 </div>
@@ -190,7 +190,7 @@ var Mover = React.createClass({
 
     render: function() {
         return (
-            <div className={(!this.props.bot ? 'webversor ':'deadline ') + 'mover'}
+            <div className={(!this.props.bot ? 'usr ':'deadline ') + 'mover'}
                  tabIndex="-1" // Enables key handlers on div
                  onKeyDown={this.handleKeyPress} style={
                 {
